@@ -1,0 +1,12 @@
+build/
+war/WEB-INF/appengine-generated/
+test/WEB-INF/appengine-generated/
+war/WEB-INF/classes/
+.project
+.classpath
+.settings/
+.externalToolBuilders/
+.factorypath
+target/
+bin/
+www-test/
