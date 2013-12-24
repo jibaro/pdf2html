@@ -8,4 +8,6 @@ public interface Page {
     public Html getHtml();
 
     public int getNum();
+
+    public void close() throws Exception;
 }

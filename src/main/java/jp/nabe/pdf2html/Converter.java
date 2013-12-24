@@ -8,4 +8,5 @@ public interface Converter {
 
     public List<Page> getPages() throws Exception;
 
+    public void close() throws Exception;
 }

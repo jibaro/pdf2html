@@ -5,6 +5,7 @@ import jp.nabe.pdf2html.Resources;
 import jp.nabe.pdf2html.Template;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.util.PDFText2HTML;
 
 public class PdfboxHtml implements Html {
 
@@ -14,7 +15,9 @@ public class PdfboxHtml implements Html {
         this.doc = doc;
     }
 
-    public String toString(Template template, Resources resources) {
-        return "";
+    public String toString(Template template, Resources resources) throws Exception {
+        PDFText2HTML html = new PDFText2HTML(template.getEncoding());
+        String text = html.getText(doc);
+        return text;
     }
 }

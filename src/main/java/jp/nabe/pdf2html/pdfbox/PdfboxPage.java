@@ -31,10 +31,16 @@ public class PdfboxPage implements Page {
         if (html == null) {
             html = new PdfboxHtml(doc);
         }
-        return null;
+        return html;
     }
 
     public int getNum() {
         return num;
+    }
+
+    public void close() throws Exception {
+        if (doc != null) {
+            doc.close();
+        }
     }
 }

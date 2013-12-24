@@ -43,40 +43,41 @@ public class PdfboxConverter implements Converter {
     }
 
     public List<Page> getPages() throws Exception {
-        if (pages == null) {
+        if (pages.isEmpty()) {
             parse();
         }
         return pages;
     }
 
+    public void close() throws Exception {
+        if (!pages.isEmpty()) {
+            for (Page page : pages) {
+                page.close();
+            }
+        }
+        if (doc != null) {
+            doc.close();
+        }
+        if (data != null) {
+            data.close();
+        }
+    }
+
     @SuppressWarnings("unchecked")
     protected void parse() throws Exception {
         pages.clear();
-        doc = null;
-        try {
-            doc = PDDocument.load(data);
-            Splitter splitter = new Splitter();
-            List<PDDocument> docList = splitter.split(doc);
-            List<PDPage> pageList = doc.getDocumentCatalog().getAllPages();
-            for (int i = 0; i < docList.size(); i++) {
-                PDDocument pageDoc = null;
-                try {
-                    pageDoc = docList.get(i);
-                    PDPage page = pageList.get(i);
+        doc = PDDocument.load(data);
+        Splitter splitter = new Splitter();
+        List<PDDocument> docList = splitter.split(doc);
+        List<PDPage> pageList = doc.getDocumentCatalog().getAllPages();
+        for (int i = 0; i < docList.size(); i++) {
+            PDDocument pageDoc = docList.get(i);
+            PDPage page = pageList.get(i);
 
-                    ByteArrayOutputStream pageData = new ByteArrayOutputStream();
-                    pageDoc.save(pageData);
-                    pages.add(new PdfboxPage(i + 1, pageDoc, page));
-                } finally {
-                    if (pageDoc != null) {
-                        pageDoc.close();
-                    }
-                }
-            }
-        } finally {
-            if (doc != null) {
-                doc.close();
-            }
+            ByteArrayOutputStream pageData = new ByteArrayOutputStream();
+            pageDoc.save(pageData);
+            pages.add(new PdfboxPage(i + 1, pageDoc, page));
         }
     }
+
 }
