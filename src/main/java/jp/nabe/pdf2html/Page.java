@@ -5,7 +5,7 @@ public interface Page {
 
     public Resources getResources();
 
-    public Html getHtml();
+    public Html getHtml() throws Exception;
 
     public int getNum();
 

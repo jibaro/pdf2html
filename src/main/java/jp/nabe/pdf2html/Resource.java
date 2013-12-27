@@ -2,7 +2,7 @@ package jp.nabe.pdf2html;
 
 import java.io.InputStream;
 
-public interface Resource {
+public interface Resource extends Component {
 
     public String getUrl();
 

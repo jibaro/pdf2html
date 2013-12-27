@@ -27,7 +27,7 @@ public class PdfboxPage implements Page {
         return resources;
     }
 
-    public PdfboxHtml getHtml() {
+    public PdfboxHtml getHtml() throws Exception {
         if (html == null) {
             html = new PdfboxHtml(doc);
         }

@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 
+import jp.nabe.pdf2html.Component;
 import jp.nabe.pdf2html.Converter;
 import jp.nabe.pdf2html.Html;
 import jp.nabe.pdf2html.Page;
@@ -37,7 +38,7 @@ public class PdfboxConverterTest {
     @Test
     public void getPage() throws Exception {
         Converter converter = new PdfboxConverter(data.toByteArray());
-        Page page = converter.getPage(1);
+        Page page = converter.getPage(3);
         Resources resources = page.getResources();
         Html html = page.getHtml();
 
@@ -50,6 +51,23 @@ public class PdfboxConverterTest {
             public String getEncoding() {
                 return "UTF-8";
             }
+
+            public String getHeader(String title, Component... components) {
+                return "<title>" + title + "</title>";
+            }
+
+            public String getFooter(Component... components) {
+                return "";
+            }
+
+            public String getContent(Component... components) {
+                StringBuilder content = new StringBuilder();
+                for (Component component : components) {
+                    content.append("<p>").append(component.getValue()).append("</p>\n");
+                }
+                return content.toString();
+            }
+
         };
         String text = html.toString(template, resources);
         assertThat(text, is(notNullValue()));

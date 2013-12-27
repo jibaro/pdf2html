@@ -48,4 +48,8 @@ public class PdfboxResource implements Resource {
         }
         return null;
     }
+
+    public String getValue() {
+        return getUrl();
+    }
 }
