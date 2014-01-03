@@ -32,13 +32,22 @@ public class TextWriter extends Writer {
         StringBuilder buff = new StringBuilder();
         List<Text> list = new ArrayList<Text>();
         for (int i = 0; i < cs.length; i++) {
-            char c = cs[i];
-            if (isInvalid(c)) {
+            Character current = cs[i];
+            if (isInvalid(current)) {
                 continue;
             }
-            buff.append(escape(c));
+            Character prev = null;
+            if (i - 1 > 0) {
+                prev = cs[i - 1];
+            }
+            Character next = null;
+            if (i + 1 < cs.length) {
+                next = cs[i + 1];
+            }
 
-            if (isLineEnd(c)) {
+            buff.append(escape(current));
+
+            if (isLineEnd(current, prev, next)) {
                 Text text = new Text(buff.toString());
                 list.add(text);
                 buff.setLength(0);
@@ -68,27 +77,32 @@ public class TextWriter extends Writer {
         }
     }
 
-    protected boolean isInvalid(char c) {
-        switch (c) {
-        case '\n':
-        case '\r':
-        case '\t':
-        case '\u0020':
-        case '\u3000':
+    protected boolean isInvalid(Character current) {
+        switch (current) {
+        case '\n': // LF
+        case '\r': // CR
+        case '\t': // Tab
+        case '\u0020': // en space
+        case '\u3000': // em space
             return true;
         }
         return false;
     }
 
-    protected boolean isLineEnd(char c) {
-        switch (c) {
-        case '\u3001':
-        case '\u3002':
-        case '\u002E':
-        case '\uFF0E':
-            return true;
+    protected boolean isLineEnd(Character current, Character prev, Character next) {
+        switch (current) {
+        case '\u002E': // en period
+        case '\u3002': // em period
+        case '\uFF0E': // en large period
+            return !(isDigit(prev) || isDigit(next));
         }
         return false;
     }
 
+    protected boolean isDigit(Character c) {
+        if (c == null) {
+            return false;
+        }
+        return Character.isDigit(c);
+    }
 }
