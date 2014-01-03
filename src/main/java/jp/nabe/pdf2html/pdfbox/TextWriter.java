@@ -36,7 +36,7 @@ public class TextWriter extends Writer {
             if (isInvalid(c)) {
                 continue;
             }
-            buff.append(c);
+            buff.append(escape(c));
 
             if (isLineEnd(c)) {
                 Text text = new Text(buff.toString());
@@ -53,16 +53,42 @@ public class TextWriter extends Writer {
         return list;
     }
 
+    protected String escape(char c) {
+        switch (c) {
+        case 34:
+            return "&quot;";
+        case 38:
+            return "&amp;";
+        case 60:
+            return "&lt;";
+        case 62:
+            return "&gt;";
+        default:
+            return String.valueOf(c);
+        }
+    }
+
     protected boolean isInvalid(char c) {
+        switch (c) {
+        case '\n':
+        case '\r':
+        case '\t':
+        case '\u0020':
+        case '\u3000':
+            return true;
+        }
         return false;
     }
 
     protected boolean isLineEnd(char c) {
+        switch (c) {
+        case '\u3001':
+        case '\u3002':
+        case '\u002E':
+        case '\uFF0E':
+            return true;
+        }
         return false;
-    }
-
-    public Text[] toArray() {
-        return toList().toArray(new Text[0]);
     }
 
 }

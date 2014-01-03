@@ -1,12 +1,14 @@
 package jp.nabe.pdf2html.pdfbox;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import jp.nabe.pdf2html.Component;
 import jp.nabe.pdf2html.Html;
 import jp.nabe.pdf2html.Resources;
 import jp.nabe.pdf2html.Template;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFText2HTML;
 
@@ -31,7 +33,10 @@ public class PdfboxHtml extends PDFText2HTML implements Html {
         TextWriter writer = new TextWriter();
         writeText(document, writer);
 
-        return template.getContent(ArrayUtils.addAll(writer.toArray(), resources.toArray()));
+        List<Component> components = new ArrayList<Component>();
+        components.addAll(writer.toList());
+        components.addAll(resources.toList());
+        return template.getContent(components.toArray(new Component[0]));
     }
 
     public String toString(Template template, Resources resources) throws Exception {
@@ -39,11 +44,9 @@ public class PdfboxHtml extends PDFText2HTML implements Html {
         String contents = getContents(template, resources);
         String footer = template.getFooter();
 
-        StringBuilder text = new StringBuilder(); 
-        text.append("<!DOCTYPE html><html>")
-            .append("<head>").append(header).append("</head>")
-            .append("<body>").append(contents).append(footer)
-            .append("</body></html>");
+        StringBuilder text = new StringBuilder(header)
+            .append(contents)
+            .append(footer);
 
         return text.toString();
     }
@@ -66,7 +69,7 @@ public class PdfboxHtml extends PDFText2HTML implements Html {
 
     @Override
     protected void writeString(String chars) throws IOException {
-        super.writeString(chars);
+        output.write(chars);
     }
 
 }

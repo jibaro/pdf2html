@@ -29,10 +29,6 @@ public class PdfboxResources implements Resources {
         return new ArrayList<Resource>(map.values());
     }
 
-    public Resource[] toArray() throws Exception {
-        return toList().toArray(new Resource[0]);
-    }
-
     public Resource getResource(String key) throws Exception {
         if (map.isEmpty()) {
             parse();

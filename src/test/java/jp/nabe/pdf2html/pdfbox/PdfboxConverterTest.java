@@ -53,11 +53,15 @@ public class PdfboxConverterTest {
             }
 
             public String getHeader(String title, Component... components) {
-                return "<title>" + title + "</title>";
+                StringBuilder head = new StringBuilder("<!DOCTYPE html><html><head>")
+                    .append(String.format("<meta http-equiv='Content-Type' content='text/html; charset=%s'>", getEncoding()))
+                    .append("<title>").append(title).append("</title>")
+                    .append("</head><body>");
+                return head.toString();
             }
 
             public String getFooter(Component... components) {
-                return "";
+                return "</body></html>";
             }
 
             public String getContent(Component... components) {

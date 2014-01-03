@@ -6,7 +6,5 @@ public interface Resources {
 
     public List<Resource> toList() throws Exception;
 
-    public Resource[] toArray() throws Exception;
-
     public Resource getResource(String key) throws Exception;
 }
