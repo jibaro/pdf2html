@@ -1,10 +1,10 @@
-package jp.nabe.pdf2html;
+package jp.nabe.pdf2html.parser;
 
-public class Text implements Component {
+public class Sentence {
 
     private final String value;
 
-    public Text(String value) {
+    public Sentence(String value) {
         this.value = value;
     }
 

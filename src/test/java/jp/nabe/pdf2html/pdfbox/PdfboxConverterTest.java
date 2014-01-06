@@ -38,7 +38,7 @@ public class PdfboxConverterTest {
     @Test
     public void getPage() throws Exception {
         Converter converter = new PdfboxConverter(data.toByteArray());
-        Page page = converter.getPage(3);
+        Page page = converter.getPage(1);
         Resources resources = page.getResources();
         Html html = page.getHtml();
 

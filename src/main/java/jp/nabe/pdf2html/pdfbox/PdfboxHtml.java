@@ -1,6 +1,7 @@
 package jp.nabe.pdf2html.pdfbox;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,9 @@ import jp.nabe.pdf2html.Component;
 import jp.nabe.pdf2html.Html;
 import jp.nabe.pdf2html.Resources;
 import jp.nabe.pdf2html.Template;
+import jp.nabe.pdf2html.Text;
+import jp.nabe.pdf2html.parser.Sentence;
+import jp.nabe.pdf2html.parser.SentenceDetector;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFText2HTML;
@@ -30,11 +34,16 @@ public class PdfboxHtml extends PDFText2HTML implements Html {
     }
 
     public String getContents(Template template, Resources resources) throws Exception {
-        TextWriter writer = new TextWriter();
+        StringWriter writer = new StringWriter();
         writeText(document, writer);
 
+        SentenceDetector detector = new SentenceDetector();
+
         List<Component> components = new ArrayList<Component>();
-        components.addAll(writer.toList());
+        for (Sentence sentence : detector.detect(writer.toString())) {
+            Component component = new Text(sentence.getValue());
+            components.add(component);
+        }
         components.addAll(resources.toList());
         return template.getContent(components.toArray(new Component[0]));
     }
