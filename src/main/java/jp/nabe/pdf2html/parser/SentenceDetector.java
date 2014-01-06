@@ -1,11 +1,13 @@
 package jp.nabe.pdf2html.parser;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class SentenceDetector {
 
-    public Sentence[] detect(String text) throws Exception {
+    public Sentence[] detect(String text, Comparator<Sentence> comparator) throws Exception {
         char[] cs = text.toCharArray();
         StringBuilder buff = new StringBuilder();
         List<Sentence> list = new ArrayList<Sentence>();
@@ -44,6 +46,7 @@ public class SentenceDetector {
             buff.setLength(0);
         }
 
+        Collections.sort(list, comparator);
         return list.toArray(new Sentence[0]);
     }
 

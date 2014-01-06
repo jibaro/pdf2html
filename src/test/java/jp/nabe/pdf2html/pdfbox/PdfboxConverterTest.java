@@ -26,7 +26,7 @@ public class PdfboxConverterTest {
     @Before
     public void before() throws Exception {
         ByteArrayOutputStream data = new ByteArrayOutputStream();
-        BufferedInputStream input = new BufferedInputStream(ClassLoader.getSystemResourceAsStream("test.pdf"));
+        BufferedInputStream input = new BufferedInputStream(ClassLoader.getSystemResourceAsStream("test2.pdf"));
         byte [] buff = new byte[1024];
         int len = 0;
         while((len =  input.read(buff)) > 0) {
