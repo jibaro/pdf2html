@@ -1,53 +1,115 @@
 package jp.nabe.pdf2html.parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 public class SentenceDetector {
 
-    public Sentence[] detect(String text, Comparator<Sentence> comparator) throws Exception {
-        char[] cs = text.toCharArray();
-        StringBuilder buff = new StringBuilder();
+    private final List<Sentence> original = new ArrayList<Sentence>();
+
+    public void add(Sentence sentence) {
+        original.add(sentence);
+    }
+
+    public void reset() {
+        original.clear();
+    }
+
+    public Sentence[] detect() throws Exception {
+        Collections.sort(original, new Comparator<Sentence>() {
+
+            public int compare(Sentence s1, Sentence s2) {
+                return (int) (s1.getCenterY() - s2.getCenterY());
+            }
+        });
+
         List<Sentence> list = new ArrayList<Sentence>();
         int bracket = 0;
-        for (int i = 0; i < cs.length; i++) {
-            Character current = cs[i];
-            if (isInvalid(current)) {
-                continue;
-            }
-            Character prev = null;
+        Sentence sentence = null;
+        for (int i = 0; i < original.size(); i++) {
+            Sentence org = original.get(i);
+            char[] cs = org.toString().toCharArray();
+            int start = 0;
+            int end = cs.length;
+
+            char[] merged = cs;
             if (i - 1 > 0) {
-                prev = cs[i - 1];
+                Sentence orgPrev = original.get(i - 1);
+                if (org.near(orgPrev)) {
+                    char[] csPrev = orgPrev.toString().toCharArray();
+                    merged = ArrayUtils.addAll(csPrev, merged);
+                    start = csPrev.length;
+                } else if (sentence != null) {
+                    sentence.setFontSize(orgPrev.getFontSize());
+                    sentence.setEndX(orgPrev.getEndX());
+                    sentence.setEndY(orgPrev.getEndY());
+                    list.add(sentence);
+                    sentence = null;
+                }
             }
-            Character next = null;
-            if (i + 1 < cs.length) {
-                next = cs[i + 1];
+            if (i + 1 < original.size()) {
+                Sentence orgNext = original.get(i + 1);
+                if (org.near(orgNext)) {
+                    char[] csNext = orgNext.toString().toCharArray();
+                    merged = ArrayUtils.addAll(merged, csNext);
+                    end = start + cs.length;
+                }
             }
 
-            if (isBracketStart(current)) {
-                bracket++;
-            } else if (isBracketEnd(current)) {
-                bracket--;
-            }
+            for (int j = start; j < end; j++) {
+                Character current = merged[j];
+                if (isInvalid(current)) {
+                    continue;
+                }
+                Character prev = null;
+                if (j - 1 > 0) {
+                    prev = merged[j - 1];
+                }
+                Character next = null;
+                if (j + 1 < merged.length) {
+                    next = merged[j + 1];
+                }
 
-            buff.append(escape(current));
+                if (isBracketStart(current)) {
+                    bracket++;
+                } else if (isBracketEnd(current)) {
+                    bracket--;
+                }
 
-            if (isLineEnd(current, prev, next, bracket)) {
-                Sentence sentence = new Sentence(buff.toString());
-                list.add(sentence);
-                buff.setLength(0);
+                if (sentence == null) {
+                    sentence = new Sentence();
+                    sentence.setFontSize(org.getFontSize());
+                    sentence.setStartX(org.getStartX());
+                    sentence.setStartY(org.getStartY());
+                }
+                sentence.append(escape(current));
+
+                if (isLineEnd(current, prev, next, bracket)) {
+                    sentence.setFontSize(org.getFontSize());
+                    sentence.setEndX(org.getEndX());
+                    sentence.setEndY(org.getEndY());
+                    list.add(sentence);
+                    sentence = null;
+                }
             }
         }
-        if (buff.length() > 0) {
-            Sentence sentence = new Sentence(buff.toString());
+        if (sentence != null) {
             list.add(sentence);
-            buff.setLength(0);
+            sentence = null;
         }
 
-        Collections.sort(list, comparator);
         return list.toArray(new Sentence[0]);
+    }
+
+    public Sentence[] detect(Comparator<Sentence> comparator) throws Exception {
+        Sentence[] list = detect();
+        Arrays.sort(list, comparator);
+        return list;
     }
 
     protected String escape(Character c) {

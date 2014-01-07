@@ -21,7 +21,6 @@ import org.apache.pdfbox.util.TextPosition;
 public class PdfboxHtml extends PDFText2HTML implements Html {
 
     private final SentenceDetector detector;
-    private final SentenceComparator comparator;
 
     public PdfboxHtml(PDDocument doc) throws IOException {
         super(null);
@@ -37,17 +36,17 @@ public class PdfboxHtml extends PDFText2HTML implements Html {
 
         document = doc;
         detector = new SentenceDetector();
-        comparator = new SentenceComparator();
     }
 
     public String getContents(Template template, Resources resources) throws Exception {
         StringWriter writer = new StringWriter();
         writeText(document, writer);
 
+        SentenceComparator comparator = new SentenceComparator();
         comparator.setHints(writer.toString());
 
         List<Component> components = new ArrayList<Component>();
-        for (Sentence sentence : detector.detect(writer.toString(), comparator)) {
+        for (Sentence sentence : detector.detect()) {
             Component component = new Text(sentence.getValue());
             components.add(component);
         }
@@ -66,11 +65,10 @@ public class PdfboxHtml extends PDFText2HTML implements Html {
 
         return text.toString();
     }
-
     @Override
     public void resetEngine() {
         super.resetEngine();
-        comparator.reset();
+        detector.reset();
     }
 
     @Override
@@ -96,31 +94,21 @@ public class PdfboxHtml extends PDFText2HTML implements Html {
 
     @Override
     protected void writeLine(List<TextPosition> line, boolean isRtlDominant, boolean hasRtl) throws IOException {
-        float maxFontSize = 0;
-        float maxPositionX = 0;
+        Sentence sentence = new Sentence();
         for (TextPosition position : line) {
             String s = position.getCharacter();
             if (s == null || s.isEmpty()) {
                 continue;
             }
-            maxFontSize = Math.max(maxFontSize, position.getFontSize());
-            maxPositionX = Math.max(maxPositionX, position.getX());
+
+            sentence.append(s)
+                .setFontSize(position.getFontSize())
+                .setPositionX(position.getX())
+                .setPositionY(position.getY());
         }
-        List<String> normalized = normalize(line, isRtlDominant, hasRtl);
-        comparator.addHint(normalize(normalized), calcPriority(maxFontSize, maxPositionX));
+        detector.add(sentence);
 
-        writeLine(normalized, isRtlDominant);
+        writeLine(normalize(line, isRtlDominant, hasRtl), isRtlDominant);
     }
 
-    protected float calcPriority(float fontSize, float positionX) {
-        return (fontSize * 100) + (1000 - positionX);
-    }
-
-    private String normalize(List<String> line) {
-        StringBuilder normalized = new StringBuilder();
-        for (String s : line) {
-            normalized.append(s);
-        }
-        return normalized.toString();
-    }
 }
