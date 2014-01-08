@@ -16,9 +16,27 @@ public class SentenceComparator implements Comparator<Sentence> {
     private final List<Hint> hints = new ArrayList<Hint>();
 
     public int compare(Sentence s1, Sentence s2) {
-        int priority1 = getPriority(s1);
-        int priority2 = getPriority(s2);
-        return priority2 - priority1;
+        if (isShortSentence(s1)) {
+            if (!isShortSentence(s2)) {
+                return 1;
+            }
+        } else {
+            if (isShortSentence(s2)) {
+                return -1;
+            }
+        }
+
+        if (s1.near(s2)) {
+            int priority1 = getPriority(s1);
+            int priority2 = getPriority(s2);
+            return priority2 - priority1;
+        } else {
+            return s1.compareTo(s2);
+        }
+    }
+
+    protected boolean isShortSentence(Sentence sentence) {
+        return sentence.getCharLength() < SentenceProperty.SHORT_LENGTH;
     }
 
     public int getPriority(Sentence sentence) {

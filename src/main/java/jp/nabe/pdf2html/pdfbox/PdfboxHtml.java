@@ -46,7 +46,7 @@ public class PdfboxHtml extends PDFText2HTML implements Html {
         comparator.setHints(writer.toString());
 
         List<Component> components = new ArrayList<Component>();
-        for (Sentence sentence : detector.detect()) {
+        for (Sentence sentence : detector.detect(comparator)) {
             Component component = new Text(sentence.getValue());
             components.add(component);
         }

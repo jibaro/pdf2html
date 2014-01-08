@@ -21,19 +21,14 @@ public class SentenceDetector {
     }
 
     public Sentence[] detect() throws Exception {
-        Collections.sort(original, new Comparator<Sentence>() {
-
-            public int compare(Sentence s1, Sentence s2) {
-                return (int) (s1.getCenterY() - s2.getCenterY());
-            }
-        });
+        Collections.sort(original);
 
         List<Sentence> list = new ArrayList<Sentence>();
         int bracket = 0;
         Sentence sentence = null;
         for (int i = 0; i < original.size(); i++) {
             Sentence org = original.get(i);
-            char[] cs = org.toString().toCharArray();
+            char[] cs = org.toCharArray();
             int start = 0;
             int end = cs.length;
 
@@ -41,7 +36,7 @@ public class SentenceDetector {
             if (i - 1 > 0) {
                 Sentence orgPrev = original.get(i - 1);
                 if (org.near(orgPrev)) {
-                    char[] csPrev = orgPrev.toString().toCharArray();
+                    char[] csPrev = orgPrev.toCharArray();
                     merged = ArrayUtils.addAll(csPrev, merged);
                     start = csPrev.length;
                 } else if (sentence != null) {
@@ -55,7 +50,7 @@ public class SentenceDetector {
             if (i + 1 < original.size()) {
                 Sentence orgNext = original.get(i + 1);
                 if (org.near(orgNext)) {
-                    char[] csNext = orgNext.toString().toCharArray();
+                    char[] csNext = orgNext.toCharArray();
                     merged = ArrayUtils.addAll(merged, csNext);
                     end = start + cs.length;
                 }

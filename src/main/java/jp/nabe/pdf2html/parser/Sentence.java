@@ -1,6 +1,6 @@
 package jp.nabe.pdf2html.parser;
 
-public class Sentence {
+public class Sentence implements Comparable<Sentence> {
 
     private final StringBuilder value = new StringBuilder();
 
@@ -26,6 +26,27 @@ public class Sentence {
         return getValue();
     }
 
+    public char[] toCharArray() {
+        return getValue().toCharArray();
+    }
+
+    public int getCharLength() {
+        return toCharArray().length;
+    }
+
+    public int compareTo(Sentence other) {
+        if (other == null) {
+            return 0;
+        }
+        if (getCenterY() != other.getCenterY()) {
+            return (int) (getCenterY() - other.getCenterY());
+        }
+        if (getCenterX() != other.getCenterX()) {
+            return (int) (getCenterX() - other.getCenterX());
+        }
+        return 0;
+    }
+
     public float getCenterX() {
         return startX + ((endX - startX) / 2);
     }
@@ -38,10 +59,11 @@ public class Sentence {
         if (other == null) {
             return false;
         }
-        if (Math.abs(getCenterY() - other.getCenterY()) > 150) {
+        float distance = SentenceProperty.NEAR_DISTANCE;
+        if (Math.abs(getCenterY() - other.getCenterY()) > distance) {
             return false;
         }
-        if (Math.abs(getCenterX() - other.getCenterX()) > 150) {
+        if (Math.abs(getCenterX() - other.getCenterX()) > distance) {
             return false;
         }
         return true;
