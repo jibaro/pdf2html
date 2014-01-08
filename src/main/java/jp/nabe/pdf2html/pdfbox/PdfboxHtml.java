@@ -14,6 +14,7 @@ import jp.nabe.pdf2html.parser.Sentence;
 import jp.nabe.pdf2html.parser.SentenceComparator;
 import jp.nabe.pdf2html.parser.SentenceDetector;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFText2HTML;
 import org.apache.pdfbox.util.TextPosition;
@@ -97,7 +98,7 @@ public class PdfboxHtml extends PDFText2HTML implements Html {
         Sentence sentence = new Sentence();
         for (TextPosition position : line) {
             String s = position.getCharacter();
-            if (s == null || s.isEmpty()) {
+            if (StringUtils.isEmpty(s)) {
                 continue;
             }
 

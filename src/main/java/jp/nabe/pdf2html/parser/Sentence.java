@@ -1,5 +1,8 @@
 package jp.nabe.pdf2html.parser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Sentence implements Comparable<Sentence> {
 
     private final StringBuilder value = new StringBuilder();
@@ -32,6 +35,15 @@ public class Sentence implements Comparable<Sentence> {
 
     public int getCharLength() {
         return toCharArray().length;
+    }
+
+    public List<Character> toCharList() {
+        char[] chars = toCharArray();
+        List<Character> list = new ArrayList<Character>(chars.length);
+        for (char c : chars) {
+            list.add(c);
+        }
+        return list;
     }
 
     public int compareTo(Sentence other) {

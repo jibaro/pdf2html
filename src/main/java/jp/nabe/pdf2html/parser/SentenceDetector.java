@@ -5,8 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import org.apache.commons.lang3.ArrayUtils;
+import java.util.ListIterator;
 
 public class SentenceDetector {
 
@@ -27,75 +26,81 @@ public class SentenceDetector {
         int bracket = 0;
         Sentence sentence = null;
         for (int i = 0; i < original.size(); i++) {
-            Sentence org = original.get(i);
-            char[] cs = org.toCharArray();
+            // merge prev, current and next character
+            ListIterator<Sentence> sectionIt = original.listIterator(i);
+            Sentence prevSentence = null;
+            if (sectionIt.hasPrevious()) {
+                prevSentence = original.get(sectionIt.previousIndex());
+            }
+            Sentence currentSentence = sectionIt.next();
+            List<Character> charList = currentSentence.toCharList();
             int start = 0;
-            int end = cs.length;
-
-            char[] merged = cs;
-            if (i - 1 > 0) {
-                Sentence orgPrev = original.get(i - 1);
-                if (org.near(orgPrev)) {
-                    char[] csPrev = orgPrev.toCharArray();
-                    merged = ArrayUtils.addAll(csPrev, merged);
-                    start = csPrev.length;
+            int end = currentSentence.getCharLength();
+            if (prevSentence != null) {
+                if (currentSentence.near(prevSentence)) {
+                    charList = prevSentence.toCharList();
+                    charList.addAll(currentSentence.toCharList());
+                    start = prevSentence.getCharLength();
                 } else if (sentence != null) {
-                    sentence.setFontSize(orgPrev.getFontSize());
-                    sentence.setEndX(orgPrev.getEndX());
-                    sentence.setEndY(orgPrev.getEndY());
+                    sentence.setFontSize(prevSentence.getFontSize());
+                    sentence.setEndX(prevSentence.getEndX());
+                    sentence.setEndY(prevSentence.getEndY());
                     list.add(sentence);
                     sentence = null;
                 }
             }
-            if (i + 1 < original.size()) {
-                Sentence orgNext = original.get(i + 1);
-                if (org.near(orgNext)) {
-                    char[] csNext = orgNext.toCharArray();
-                    merged = ArrayUtils.addAll(merged, csNext);
-                    end = start + cs.length;
+            if (sectionIt.hasNext()) {
+                Sentence nextSentence = sectionIt.next();
+                if (currentSentence.near(nextSentence)) {
+                    charList.addAll(nextSentence.toCharList());
+                    end = start + currentSentence.getCharLength();
                 }
+            } else if (sentence != null) {
+                sentence.setFontSize(currentSentence.getFontSize());
+                sentence.setEndX(currentSentence.getEndX());
+                sentence.setEndY(currentSentence.getEndY());
+                list.add(sentence);
+                sentence = null;
             }
 
+            // check character
             for (int j = start; j < end; j++) {
-                Character current = merged[j];
-                if (isInvalid(current)) {
+                ListIterator<Character> charIt = charList.listIterator(j);
+                Character prevChar = null;
+                if (charIt.hasPrevious()) {
+                    prevChar = charList.get(charIt.previousIndex());
+                }
+                Character currentChar = charIt.next();
+                if (isInvalid(currentChar)) {
                     continue;
                 }
-                Character prev = null;
-                if (j - 1 > 0) {
-                    prev = merged[j - 1];
-                }
-                Character next = null;
-                if (j + 1 < merged.length) {
-                    next = merged[j + 1];
+                Character nextChar = null;
+                if (charIt.hasNext()) {
+                    nextChar = charIt.next();
                 }
 
-                if (isBracketStart(current)) {
+                if (isBracketStart(currentChar)) {
                     bracket++;
-                } else if (isBracketEnd(current)) {
+                } else if (isBracketEnd(currentChar)) {
                     bracket--;
                 }
 
                 if (sentence == null) {
                     sentence = new Sentence();
-                    sentence.setFontSize(org.getFontSize());
-                    sentence.setStartX(org.getStartX());
-                    sentence.setStartY(org.getStartY());
+                    sentence.setFontSize(currentSentence.getFontSize());
+                    sentence.setStartX(currentSentence.getStartX());
+                    sentence.setStartY(currentSentence.getStartY());
                 }
-                sentence.append(escape(current));
+                sentence.append(escape(currentChar));
 
-                if (isLineEnd(current, prev, next, bracket)) {
-                    sentence.setFontSize(org.getFontSize());
-                    sentence.setEndX(org.getEndX());
-                    sentence.setEndY(org.getEndY());
+                if (isLineEnd(currentChar, prevChar, nextChar, bracket)) {
+                    sentence.setFontSize(currentSentence.getFontSize());
+                    sentence.setEndX(currentSentence.getEndX());
+                    sentence.setEndY(currentSentence.getEndY());
                     list.add(sentence);
                     sentence = null;
                 }
             }
-        }
-        if (sentence != null) {
-            list.add(sentence);
-            sentence = null;
         }
 
         return list.toArray(new Sentence[0]);
