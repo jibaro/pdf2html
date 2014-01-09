@@ -23,7 +23,6 @@ public class SentenceDetector {
         Collections.sort(original);
 
         List<Sentence> list = new ArrayList<Sentence>();
-        int bracket = 0;
         Sentence sentence = null;
         for (int i = 0; i < original.size(); i++) {
             // merge prev, current and next character
@@ -64,6 +63,7 @@ public class SentenceDetector {
             }
 
             // check character
+            int bracket = 0;
             for (int j = start; j < end; j++) {
                 ListIterator<Character> charIt = charList.listIterator(j);
                 Character prevChar = null;

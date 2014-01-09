@@ -16,15 +16,15 @@ import jp.nabe.pdf2html.parser.SentenceDetector;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.util.PDFText2HTML;
+import org.apache.pdfbox.util.PDFTextStripper;
 import org.apache.pdfbox.util.TextPosition;
 
-public class PdfboxHtml extends PDFText2HTML implements Html {
+public class PdfboxHtml extends PDFTextStripper implements Html {
 
     private final SentenceDetector detector;
 
     public PdfboxHtml(PDDocument doc) throws IOException {
-        super(null);
+        super();
         setLineSeparator("");
         setPageSeparator("");
         setWordSeparator("");
@@ -40,23 +40,14 @@ public class PdfboxHtml extends PDFText2HTML implements Html {
     }
 
     public String getContents(Template template, Resources resources) throws Exception {
-        StringWriter writer = new StringWriter();
-        writeText(document, writer);
-
-        SentenceComparator comparator = new SentenceComparator();
-        comparator.setHints(writer.toString());
-
-        List<Component> components = new ArrayList<Component>();
-        for (Sentence sentence : detector.detect(comparator)) {
-            Component component = new Text(sentence.getValue());
-            components.add(component);
-        }
-        components.addAll(resources.toList());
-        return template.getContent(components.toArray(new Component[0]));
+        Sentence[] sentences = getSentences();
+        return getContents(template, resources, sentences);
     }
 
     public String toString(Template template, Resources resources) throws Exception {
-        String header = template.getHeader(getTitle());
+        Sentence[] sentences = getSentences();
+
+        String header = template.getHeader(getTitle(sentences));
         String contents = getContents(template, resources);
         String footer = template.getFooter();
 
@@ -66,14 +57,42 @@ public class PdfboxHtml extends PDFText2HTML implements Html {
 
         return text.toString();
     }
+
+    protected Sentence[] getSentences() throws Exception {
+        StringWriter writer = new StringWriter();
+        writeText(document, writer);
+
+        SentenceComparator comparator = new SentenceComparator();
+
+        return detector.detect(comparator);
+    }
+
+    protected String getTitle(Sentence[] sentences) {
+        String titleGuess = document.getDocumentInformation().getTitle();
+        if (!StringUtils.isEmpty(titleGuess)) {
+            return titleGuess;
+        }
+
+        if (sentences == null || sentences.length == 0) {
+            return "";
+        }
+        return sentences[0].getValue();
+    }
+
+    protected String getContents(Template template, Resources resources, Sentence[] sentences) throws Exception {
+        List<Component> components = new ArrayList<Component>();
+        for (Sentence sentence : sentences) {
+            Component component = new Text(sentence.getValue());
+            components.add(component);
+        }
+        components.addAll(resources.toList());
+        return template.getContent(components.toArray(new Component[0]));
+    }
+
     @Override
     public void resetEngine() {
         super.resetEngine();
         detector.reset();
-    }
-
-    @Override
-    protected void writeHeader() throws IOException {
     }
 
     @Override
@@ -103,7 +122,7 @@ public class PdfboxHtml extends PDFText2HTML implements Html {
             }
 
             sentence.append(s)
-                .setFontSize(position.getFontSize())
+                .setFontSize(position.getFontSizeInPt())
                 .setPositionX(position.getX())
                 .setPositionY(position.getY());
         }

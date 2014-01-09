@@ -29,6 +29,23 @@ public class Sentence implements Comparable<Sentence> {
         return getValue();
     }
 
+    @Override
+    public int hashCode() {
+        return getValue().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (super.equals(obj)) {
+            return true;
+        }
+        if (!(obj instanceof Sentence)) {
+            return false;
+        }
+        Sentence other = (Sentence) obj;
+        return hashCode() == other.hashCode();
+    }
+
     public char[] toCharArray() {
         return getValue().toCharArray();
     }
@@ -50,6 +67,14 @@ public class Sentence implements Comparable<Sentence> {
         if (other == null) {
             return 0;
         }
+        if (other.equals(this)) {
+            return 0;
+        }
+
+        if (near(other)) {
+            return 0;
+        }
+
         if (getCenterY() != other.getCenterY()) {
             return (int) (getCenterY() - other.getCenterY());
         }
