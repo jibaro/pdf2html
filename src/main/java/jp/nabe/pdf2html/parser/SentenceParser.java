@@ -8,6 +8,10 @@ import org.atilika.kuromoji.Tokenizer;
 public class SentenceParser {
 
     public boolean isSentenceCompleted(Sentence sentence) {
+        if (sentence.getCharLength() < SentenceProperty.SHORT_LENGTH) {
+            return false;
+        }
+
         Tokenizer tokenizer = Tokenizer.builder().build();
         LinkedList<Token> tokens = new LinkedList<Token>(tokenizer.tokenize(sentence.getValue()));
 

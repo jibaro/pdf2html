@@ -13,6 +13,7 @@ import jp.nabe.pdf2html.Text;
 import jp.nabe.pdf2html.parser.Sentence;
 import jp.nabe.pdf2html.parser.SentenceComparator;
 import jp.nabe.pdf2html.parser.SentenceDetector;
+import jp.nabe.pdf2html.parser.SentenceSummarizer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -22,6 +23,7 @@ import org.apache.pdfbox.util.TextPosition;
 public class PdfboxHtml extends PDFTextStripper implements Html {
 
     private final SentenceDetector detector;
+    private SentenceSummarizer summarizer;
 
     public PdfboxHtml(PDDocument doc) throws IOException {
         super();
@@ -64,7 +66,7 @@ public class PdfboxHtml extends PDFTextStripper implements Html {
 
         SentenceComparator comparator = new SentenceComparator();
 
-        return detector.detect(comparator);
+        return summarize(detector.detect(comparator));
     }
 
     protected String getTitle(Sentence[] sentences) {
@@ -87,6 +89,19 @@ public class PdfboxHtml extends PDFTextStripper implements Html {
         }
         components.addAll(resources.toList());
         return template.getContent(components.toArray(new Component[0]));
+    }
+
+    @Override
+    public Html setSummarizer(SentenceSummarizer summarizer) {
+        this.summarizer = summarizer;
+        return this;
+    }
+
+    protected Sentence[] summarize(Sentence[] sentences) {
+        if (summarizer != null) {
+            sentences = summarizer.summarize(sentences);
+        }
+        return sentences;
     }
 
     @Override

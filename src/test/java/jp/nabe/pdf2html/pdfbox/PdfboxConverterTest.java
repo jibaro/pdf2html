@@ -15,6 +15,7 @@ import jp.nabe.pdf2html.Page;
 import jp.nabe.pdf2html.Resource;
 import jp.nabe.pdf2html.Resources;
 import jp.nabe.pdf2html.Template;
+import jp.nabe.pdf2html.parser.SentenceSummarizer;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +42,7 @@ public class PdfboxConverterTest {
         Page page = converter.getPage(1);
         Resources resources = page.getResources();
         Html html = page.getHtml();
+        html.setSummarizer(new SentenceSummarizer());
 
         for (Resource resource : resources.toList()) {
             System.out.println(resource.getContentType());

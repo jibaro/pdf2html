@@ -44,10 +44,6 @@ public class SentenceComparator implements Comparator<Sentence> {
     }
 
     protected boolean isSentenceCompleted(Sentence sentence) {
-        if (sentence.getCharLength() < SentenceProperty.SHORT_LENGTH) {
-            return false;
-        }
-
         SentenceParser parser = new SentenceParser();
         return parser.isSentenceCompleted(sentence);
     }
