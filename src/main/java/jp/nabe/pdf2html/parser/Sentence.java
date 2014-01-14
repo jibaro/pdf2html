@@ -76,10 +76,10 @@ public class Sentence implements Comparable<Sentence> {
         }
 
         if (getCenterY() != other.getCenterY()) {
-            return (int) (getCenterY() - other.getCenterY());
+            return getCenterY() < other.getCenterY() ? -1 : 1;
         }
         if (getCenterX() != other.getCenterX()) {
-            return (int) (getCenterX() - other.getCenterX());
+            return getCenterX() < other.getCenterX() ? -1 : 1;
         }
         return 0;
     }
