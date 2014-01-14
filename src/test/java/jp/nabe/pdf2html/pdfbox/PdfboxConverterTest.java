@@ -7,14 +7,15 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.List;
 
-import jp.nabe.pdf2html.Component;
 import jp.nabe.pdf2html.Converter;
 import jp.nabe.pdf2html.Html;
 import jp.nabe.pdf2html.Page;
 import jp.nabe.pdf2html.Resource;
 import jp.nabe.pdf2html.Resources;
 import jp.nabe.pdf2html.Template;
+import jp.nabe.pdf2html.Text;
 import jp.nabe.pdf2html.parser.SentenceSummarizer;
 
 import org.junit.Before;
@@ -54,7 +55,7 @@ public class PdfboxConverterTest {
                 return "UTF-8";
             }
 
-            public String getHeader(String title, Component... components) {
+            public String getHeader(String title) {
                 StringBuilder head = new StringBuilder("<!DOCTYPE html><html><head>")
                     .append(String.format("<meta http-equiv='Content-Type' content='text/html; charset=%s'>", getEncoding()))
                     .append("<title>").append(title).append("</title>")
@@ -62,14 +63,14 @@ public class PdfboxConverterTest {
                 return head.toString();
             }
 
-            public String getFooter(Component... components) {
+            public String getFooter() {
                 return "</body></html>";
             }
 
-            public String getContent(Component... components) {
+            public String getContent(List<Text> texts, Resources resources) {
                 StringBuilder content = new StringBuilder();
-                for (Component component : components) {
-                    content.append("<p>").append(component.getValue()).append("</p>\n");
+                for (Text text : texts) {
+                    content.append("<p>").append(text.getValue()).append("</p>\n");
                 }
                 return content.toString();
             }

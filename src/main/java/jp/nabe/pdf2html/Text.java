@@ -1,6 +1,6 @@
 package jp.nabe.pdf2html;
 
-public class Text implements Component {
+public class Text {
 
     private final String value;
 

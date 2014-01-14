@@ -5,7 +5,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.nabe.pdf2html.Component;
 import jp.nabe.pdf2html.Html;
 import jp.nabe.pdf2html.Resources;
 import jp.nabe.pdf2html.Template;
@@ -82,13 +81,12 @@ public class PdfboxHtml extends PDFTextStripper implements Html {
     }
 
     protected String getContents(Template template, Resources resources, Sentence[] sentences) throws Exception {
-        List<Component> components = new ArrayList<Component>();
+        List<Text> texts = new ArrayList<Text>();
         for (Sentence sentence : sentences) {
-            Component component = new Text(sentence.getValue());
-            components.add(component);
+            Text text = new Text(sentence.getValue());
+            texts.add(text);
         }
-        components.addAll(resources.toList());
-        return template.getContent(components.toArray(new Component[0]));
+        return template.getContent(texts, resources);
     }
 
     @Override
