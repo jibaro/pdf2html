@@ -27,9 +27,13 @@ public class PdfboxResource implements Resource {
     }
 
     public InputStream getInputStream() throws Exception {
+        return new ByteArrayInputStream(getData());
+    }
+
+    public byte[] getData() throws Exception {
         ByteArrayOutputStream data = new ByteArrayOutputStream();
         image.write2OutputStream(data);
-        return new ByteArrayInputStream(data.toByteArray());
+        return data.toByteArray();
     }
 
     public String getContentType() {

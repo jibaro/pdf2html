@@ -80,6 +80,12 @@ public class PdfboxHtml extends PDFTextStripper implements Html {
         return sentences[0].getValue();
     }
 
+    @Override
+    public String getTitle() throws Exception {
+        Sentence[] sentences = getSentences();
+        return getTitle(sentences);
+    }
+
     protected String getContents(Template template, Resources resources, Sentence[] sentences) throws Exception {
         List<Text> texts = new ArrayList<Text>();
         for (Sentence sentence : sentences) {

@@ -10,6 +10,8 @@ public interface Resource {
 
     public InputStream getInputStream() throws Exception;
 
+    public byte[] getData() throws Exception;
+
     public String getContentType();
 
 }

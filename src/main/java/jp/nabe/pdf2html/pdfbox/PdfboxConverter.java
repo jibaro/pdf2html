@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.nabe.pdf2html.Converter;
+import jp.nabe.pdf2html.Html;
 import jp.nabe.pdf2html.Page;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -47,6 +48,17 @@ public class PdfboxConverter implements Converter {
             parse();
         }
         return pages;
+    }
+
+    @Override
+    public String getTitle() throws Exception {
+        Page page = getPage(1);
+        if (page == null) {
+            return "";
+        }
+
+        Html html = page.getHtml();
+        return html.getTitle();
     }
 
     public void close() throws Exception {
