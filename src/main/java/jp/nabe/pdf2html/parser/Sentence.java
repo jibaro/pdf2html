@@ -65,7 +65,7 @@ public class Sentence implements Comparable<Sentence> {
 
     public int compareTo(Sentence other) {
         if (other == null) {
-            return 0;
+            throw new NullPointerException();
         }
         if (other.equals(this)) {
             return 0;
@@ -75,20 +75,20 @@ public class Sentence implements Comparable<Sentence> {
             return 0;
         }
 
-        if (getCenterY() != other.getCenterY()) {
-            return getCenterY() < other.getCenterY() ? -1 : 1;
+        if (!getCenterY().equals(other.getCenterY())) {
+            return getCenterY().compareTo(other.getCenterY());
         }
-        if (getCenterX() != other.getCenterX()) {
-            return getCenterX() < other.getCenterX() ? -1 : 1;
+        if (!getCenterX().equals(other.getCenterX())) {
+            return getCenterX().compareTo(other.getCenterX());
         }
         return 0;
     }
 
-    public float getCenterX() {
+    public Float getCenterX() {
         return startX + ((endX - startX) / 2);
     }
 
-    public float getCenterY() {
+    public Float getCenterY() {
         return startY + ((endY - startY) / 2);
     }
 
