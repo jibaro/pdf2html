@@ -19,16 +19,22 @@ import jp.nabe.pdf2html.Text;
 import jp.nabe.pdf2html.parser.SentenceSummarizer;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class PdfboxConverterTest {
 
     private ByteArrayOutputStream data;
 
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+    }
+
     @Before
     public void before() throws Exception {
         ByteArrayOutputStream data = new ByteArrayOutputStream();
-        BufferedInputStream input = new BufferedInputStream(ClassLoader.getSystemResourceAsStream("test.pdf"));
+        BufferedInputStream input = new BufferedInputStream(ClassLoader.getSystemResourceAsStream("test4.pdf"));
         byte [] buff = new byte[1024];
         int len = 0;
         while((len =  input.read(buff)) > 0) {
@@ -40,7 +46,7 @@ public class PdfboxConverterTest {
     @Test
     public void getPage() throws Exception {
         Converter converter = new PdfboxConverter(data.toByteArray());
-        Page page = converter.getPage(1);
+        Page page = converter.getPage(3);
         Resources resources = page.getResources();
         Html html = page.getHtml();
         html.setSummarizer(new SentenceSummarizer());
