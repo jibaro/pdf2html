@@ -71,10 +71,6 @@ public class Sentence implements Comparable<Sentence> {
             return 0;
         }
 
-        if (near(other)) {
-            return 0;
-        }
-
         if (!getCenterY().equals(other.getCenterY())) {
             return getCenterY().compareTo(other.getCenterY());
         }

@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-public class SentenceTest {
+public class SentenceComparatorTest {
 
     @Test
     public void compareTo() throws Exception {
@@ -21,17 +21,18 @@ public class SentenceTest {
             }
         }
 
+        SentenceComparator comparator = new SentenceComparator();
         for (int i = 0; i < list.size() - 2; i++) {
             Sentence a = list.get(i);
             Sentence b = list.get(i + 1);
             Sentence c = list.get(i + 2);
 
-            int ab = a.compareTo(b);
-            int ac = a.compareTo(c);
-            int ba = b.compareTo(a);
-            int bc = b.compareTo(c);
-            int ca = c.compareTo(a);
-            int cb = c.compareTo(b);
+            int ab = comparator.compare(a, b);
+            int ac = comparator.compare(a, c);
+            int ba = comparator.compare(b, a);
+            int bc = comparator.compare(b, c);
+            int ca = comparator.compare(c, a);
+            int cb = comparator.compare(c, b);
 
             String msg = new StringBuilder()
                 .append("a:").append(a.getValue()).append("(").append(a.getCenterX()).append(",").append(a.getCenterY()).append(")")
