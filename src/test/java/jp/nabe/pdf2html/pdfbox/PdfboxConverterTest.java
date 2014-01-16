@@ -68,7 +68,7 @@ public class PdfboxConverterTest {
                 return "</body></html>";
             }
 
-            public String getContent(List<Text> texts, Resources resources) {
+            public String getContent(int pageNum, List<Text> texts, Resources resources) {
                 StringBuilder content = new StringBuilder();
                 for (Text text : texts) {
                     content.append("<p>").append(text.getValue()).append("</p>\n");

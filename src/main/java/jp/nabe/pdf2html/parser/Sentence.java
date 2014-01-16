@@ -71,17 +71,7 @@ public class Sentence implements Comparable<Sentence> {
             return 0;
         }
 
-        if (!near(other)) {
-            return getDiagonal().compareTo(other.getDiagonal());
-        }
-
-        if (!getCenterY().equals(other.getCenterY())) {
-            return getCenterY().compareTo(other.getCenterY());
-        }
-        if (!getCenterX().equals(other.getCenterX())) {
-            return getCenterX().compareTo(other.getCenterX());
-        }
-        return 0;
+        return getDiagonal().compareTo(other.getDiagonal());
     }
 
     public Double getDiagonal() {

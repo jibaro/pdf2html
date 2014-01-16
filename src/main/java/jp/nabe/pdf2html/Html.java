@@ -7,7 +7,7 @@ public interface Html {
 
     public String toString(Template template, Resources resources) throws Exception;
 
-    public String getContents(Template template, Resources resources) throws Exception;
+    public String getContents(int pageNum, Template template, Resources resources) throws Exception;
 
     public Html setSummarizer(SentenceSummarizer summarizer);
 

@@ -40,16 +40,16 @@ public class PdfboxHtml extends PDFTextStripper implements Html {
         detector = new SentenceDetector();
     }
 
-    public String getContents(Template template, Resources resources) throws Exception {
+    public String getContents(int pageNum, Template template, Resources resources) throws Exception {
         Sentence[] sentences = getSentences();
-        return getContents(template, resources, sentences);
+        return getContents(pageNum, template, resources, sentences);
     }
 
     public String toString(Template template, Resources resources) throws Exception {
         Sentence[] sentences = getSentences();
 
         String header = template.getHeader(getTitle(sentences));
-        String contents = getContents(template, resources);
+        String contents = getContents(0, template, resources, sentences);
         String footer = template.getFooter();
 
         StringBuilder text = new StringBuilder(header)
@@ -86,13 +86,13 @@ public class PdfboxHtml extends PDFTextStripper implements Html {
         return getTitle(sentences);
     }
 
-    protected String getContents(Template template, Resources resources, Sentence[] sentences) throws Exception {
+    protected String getContents(int pageNum, Template template, Resources resources, Sentence[] sentences) throws Exception {
         List<Text> texts = new ArrayList<Text>();
         for (Sentence sentence : sentences) {
             Text text = new Text(sentence.getValue());
             texts.add(text);
         }
-        return template.getContent(texts, resources);
+        return template.getContent(pageNum, texts, resources);
     }
 
     @Override

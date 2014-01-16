@@ -8,7 +8,7 @@ public interface Template {
 
     public String getHeader(String title);
 
-    public String getContent(List<Text> texts, Resources resources);
+    public String getContent(int pageNum, List<Text> texts, Resources resources);
 
     public String getFooter();
 
