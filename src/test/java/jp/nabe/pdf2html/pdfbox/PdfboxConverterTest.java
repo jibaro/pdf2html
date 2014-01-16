@@ -35,6 +35,7 @@ public class PdfboxConverterTest {
             data.write(buff, 0, len);
         }
         this.data = data;
+        input.close();
     }
 
     @Test

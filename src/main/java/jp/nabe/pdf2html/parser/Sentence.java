@@ -71,6 +71,10 @@ public class Sentence implements Comparable<Sentence> {
             return 0;
         }
 
+        if (!near(other)) {
+            return getDiagonal().compareTo(other.getDiagonal());
+        }
+
         if (!getCenterY().equals(other.getCenterY())) {
             return getCenterY().compareTo(other.getCenterY());
         }
@@ -78,6 +82,13 @@ public class Sentence implements Comparable<Sentence> {
             return getCenterX().compareTo(other.getCenterX());
         }
         return 0;
+    }
+
+    public Double getDiagonal() {
+        Double x = getCenterX().doubleValue();
+        Double y = getCenterY().doubleValue();
+        Double d = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        return d;
     }
 
     public Float getCenterX() {
