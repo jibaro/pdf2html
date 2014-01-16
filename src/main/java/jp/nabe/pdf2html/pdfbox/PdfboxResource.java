@@ -53,7 +53,16 @@ public class PdfboxResource implements Resource {
         return null;
     }
 
+    public int getWidth() {
+        return image.getWidth();
+    }
+
+    public int getHeight() {
+        return image.getHeight();
+    }
+
     public String getValue() {
         return getUrl();
     }
+
 }

@@ -14,4 +14,8 @@ public interface Resource {
 
     public String getContentType();
 
+    public int getWidth();
+
+    public int getHeight();
+
 }
