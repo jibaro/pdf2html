@@ -1,21 +1,20 @@
 package jp.nabe.pdf2html.pdfbox;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 import jp.nabe.pdf2html.Resource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
+import org.apache.pdfbox.pdmodel.graphics.xobject.PDSimpleImages;
 
 public class PdfboxResource implements Resource {
 
-    private final PDXObjectImage image;
+    private final PDSimpleImages.Image image;
 
     private String url;
 
-    public PdfboxResource(PDXObjectImage image) {
+    public PdfboxResource(PDSimpleImages.Image image) {
         this.image = image;
     }
 
@@ -36,26 +35,11 @@ public class PdfboxResource implements Resource {
     }
 
     public byte[] getData() throws Exception {
-        ByteArrayOutputStream data = new ByteArrayOutputStream();
-        image.write2OutputStream(data);
-        return data.toByteArray();
+        return image.getData();
     }
 
     public String getContentType() {
-        String suffix = image.getSuffix();
-        if ("jpg".equals(suffix)) {
-            return "image/jpg";
-        }
-        if ("png".equals(suffix)) {
-            return "image/png";
-        }
-        if ("tiff".equals(suffix)) {
-            return "image/tiff";
-        }
-        if ("gif".equals(suffix)) {
-            return "image/gif";
-        }
-        return null;
+        return image.getMimeType();
     }
 
     public int getWidth() {

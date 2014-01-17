@@ -9,8 +9,7 @@ import jp.nabe.pdf2html.Resource;
 import jp.nabe.pdf2html.Resources;
 
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDResources;
-import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
+import org.apache.pdfbox.pdmodel.graphics.xobject.PDSimpleImages;
 
 public class PdfboxResources implements Resources {
 
@@ -39,10 +38,10 @@ public class PdfboxResources implements Resources {
     protected void parse() throws Exception {
         map.clear();
 
-        PDResources resources = page.getResources();
-        Map<String, PDXObjectImage> images = resources.getImages();
+        PDSimpleImages pdimages = new PDSimpleImages(page.getResources());
+        Map<String, PDSimpleImages.Image> images = pdimages.getImages();
         for (String key : images.keySet()) {
-            PDXObjectImage image = images.get(key);
+            PDSimpleImages.Image image = images.get(key);
 
             PdfboxResource resource = new PdfboxResource(image);
             map.put(key, resource);
