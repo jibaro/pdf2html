@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import jp.nabe.pdf2html.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 
 public class PdfboxResource implements Resource {
@@ -24,6 +25,10 @@ public class PdfboxResource implements Resource {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public boolean isUrlEmpty() {
+        return StringUtils.isEmpty(url);
     }
 
     public InputStream getInputStream() throws Exception {

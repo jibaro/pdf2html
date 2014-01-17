@@ -8,6 +8,8 @@ public interface Resource {
 
     public void setUrl(String url);
 
+    public boolean isUrlEmpty();
+
     public InputStream getInputStream() throws Exception;
 
     public byte[] getData() throws Exception;
