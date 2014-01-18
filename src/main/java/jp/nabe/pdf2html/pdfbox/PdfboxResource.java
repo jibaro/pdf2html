@@ -18,34 +18,42 @@ public class PdfboxResource implements Resource {
         this.image = image;
     }
 
+    @Override
     public String getUrl() {
         return url;
     }
 
+    @Override
     public void setUrl(String url) {
         this.url = url;
     }
 
+    @Override
     public boolean isUrlEmpty() {
         return StringUtils.isEmpty(url);
     }
 
+    @Override
     public InputStream getInputStream() throws Exception {
         return new ByteArrayInputStream(getData());
     }
 
+    @Override
     public byte[] getData() throws Exception {
         return image.getData();
     }
 
+    @Override
     public String getContentType() {
         return image.getMimeType();
     }
 
+    @Override
     public int getWidth() {
         return image.getWidth();
     }
 
+    @Override
     public int getHeight() {
         return image.getHeight();
     }

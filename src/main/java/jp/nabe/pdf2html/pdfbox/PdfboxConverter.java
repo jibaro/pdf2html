@@ -29,6 +29,7 @@ public class PdfboxConverter implements Converter {
         this(new ByteArrayInputStream(data));
     }
 
+    @Override
     public Page getPage(int num) throws Exception {
         int index = num - 1;
         if (index < 0) {
@@ -43,6 +44,7 @@ public class PdfboxConverter implements Converter {
         return pages.get(index);
     }
 
+    @Override
     public List<Page> getPages() throws Exception {
         if (pages.isEmpty()) {
             parse();
@@ -59,6 +61,11 @@ public class PdfboxConverter implements Converter {
 
         Html html = page.getHtml();
         return html.getTitle();
+    }
+
+    @Override
+    public int getTotal() {
+        return doc.getNumberOfPages();
     }
 
     public void close() throws Exception {

@@ -40,15 +40,17 @@ public class PdfboxHtml extends PDFTextStripper implements Html {
         detector = new SentenceDetector();
     }
 
+    @Override
     public String getContents(int pageNum, Template template, Resources resources) throws Exception {
         Sentence[] sentences = getSentences();
         return getContents(pageNum, template, resources, sentences);
     }
 
+    @Override
     public String toString(Template template, Resources resources) throws Exception {
         Sentence[] sentences = getSentences();
 
-        String header = template.getHeader(getTitle(sentences));
+        String header = template.getHeader(getTitle(sentences), 1);
         String contents = getContents(0, template, resources, sentences);
         String footer = template.getFooter();
 

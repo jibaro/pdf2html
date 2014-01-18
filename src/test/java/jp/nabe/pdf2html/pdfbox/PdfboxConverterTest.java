@@ -56,7 +56,7 @@ public class PdfboxConverterTest {
                 return "UTF-8";
             }
 
-            public String getHeader(String title) {
+            public String getHeader(String title, int total) {
                 StringBuilder head = new StringBuilder("<!DOCTYPE html><html><head>")
                     .append(String.format("<meta http-equiv='Content-Type' content='text/html; charset=%s'>", getEncoding()))
                     .append("<title>").append(title).append("</title>")

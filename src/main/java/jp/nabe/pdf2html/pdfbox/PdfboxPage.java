@@ -20,6 +20,7 @@ public class PdfboxPage implements Page {
         this.page = page;
     }
 
+    @Override
     public PdfboxResources getResources() {
         if (resources == null) {
             resources = new PdfboxResources(page);
@@ -27,6 +28,7 @@ public class PdfboxPage implements Page {
         return resources;
     }
 
+    @Override
     public PdfboxHtml getHtml() throws Exception {
         if (html == null) {
             html = new PdfboxHtml(doc);
@@ -34,10 +36,12 @@ public class PdfboxPage implements Page {
         return html;
     }
 
+    @Override
     public int getNum() {
         return num;
     }
 
+    @Override
     public void close() throws Exception {
         if (doc != null) {
             doc.close();
