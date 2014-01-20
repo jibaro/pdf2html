@@ -18,22 +18,20 @@ public class SentenceComparator implements Comparator<Sentence> {
             return 0;
         }
 
+        if (isLargeFontSentence(s1)) {
+            if (!isLargeFontSentence(s2)) {
+                return -1;
+            }
+        } else if (isLargeFontSentence(s2)) {
+            return 1;
+        }
+
         if (isSentenceCompleted(s1)) {
             if (!isSentenceCompleted(s2)) {
                 return -1;
             }
         } else if (isSentenceCompleted(s2)) {
             return 1;
-        }
-
-        if (s1.near(s2)) {
-            if (isLargeFontSentence(s1)) {
-                if (!isLargeFontSentence(s2)) {
-                    return -1;
-                }
-            } else if (isLargeFontSentence(s2)) {
-                return 1;
-            }
         }
 
         return s1.compareTo(s2);

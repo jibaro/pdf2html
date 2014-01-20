@@ -28,7 +28,7 @@ public class PdfboxConverterTest {
     @Before
     public void before() throws Exception {
         ByteArrayOutputStream data = new ByteArrayOutputStream();
-        BufferedInputStream input = new BufferedInputStream(ClassLoader.getSystemResourceAsStream("test.pdf"));
+        BufferedInputStream input = new BufferedInputStream(ClassLoader.getSystemResourceAsStream("test2.pdf"));
         byte [] buff = new byte[1024];
         int len = 0;
         while((len =  input.read(buff)) > 0) {
@@ -41,7 +41,7 @@ public class PdfboxConverterTest {
     @Test
     public void getPage() throws Exception {
         Converter converter = new PdfboxConverter(data.toByteArray());
-        Page page = converter.getPage(1);
+        Page page = converter.getPage(4);
         Resources resources = page.getResources();
         Html html = page.getHtml();
         html.setSummarizer(new SentenceSummarizer());

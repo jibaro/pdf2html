@@ -2,7 +2,6 @@ package jp.nabe.pdf2html.parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
@@ -20,7 +19,8 @@ public class SentenceDetector {
     }
 
     public Sentence[] detect() throws Exception {
-        Collections.sort(original);
+        SentencePointMergeSort sorter = new SentencePointMergeSort();
+        sorter.sort(original);
 
         List<Sentence> list = new ArrayList<Sentence>();
         Sentence sentence = null;
