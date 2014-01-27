@@ -1,6 +1,8 @@
 package jp.nabe.pdf2html.pdfbox;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,14 @@ public class PdfboxHtml extends PDFTextStripper implements Html {
         detector = new SentenceDetector();
     }
 
+    public PdfboxHtml(InputStream data) throws IOException {
+        this(PDDocument.load(data));
+    }
+
+    public PdfboxHtml(byte[] data) throws IOException {
+        this(PDDocument.load(new ByteArrayInputStream(data)));
+    }
+
     @Override
     public String getContents(int pageNum, Template template, Resources resources) throws Exception {
         Sentence[] sentences = getSentences();
@@ -61,7 +71,8 @@ public class PdfboxHtml extends PDFTextStripper implements Html {
         return text.toString();
     }
 
-    protected Sentence[] getSentences() throws Exception {
+    @Override
+    public Sentence[] getSentences() throws Exception {
         StringWriter writer = new StringWriter();
         writeText(document, writer);
 
