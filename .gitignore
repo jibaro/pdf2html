@@ -10,3 +10,5 @@ war/WEB-INF/classes/
 target/
 bin/
 www-test/
+.idea/
+*.iml
